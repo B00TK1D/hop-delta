@@ -8,6 +8,7 @@ exploit_thread = None
 
 def scan_loop():
     while True:
+        db.clear_log()
         try:
             with open("bssid-log.csv", "r") as f:
                 lines = f.readlines()
@@ -18,8 +19,9 @@ def scan_loop():
                     first_seen_str = line.split(",")[1]
                     last_seen_str = line.split(",")[2]
                     # Convert first seen and last seen from strings to time epochs
-                    f#irst_seen = 
-                    db.log_bssid(bssid)
+                    first_seen = time.mktime(time.strptime(first_seen_str, "%Y-%m-%d %H:%M:%S"))
+                    last_seen = time.mktime(time.strptime(last_seen_str, "%Y-%m-%d %H:%M:%S"))
+                    db.log_bssid(bssid, first_seen, last_seen)
         except:
             pass
         time.sleep(1)

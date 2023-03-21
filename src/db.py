@@ -4,13 +4,13 @@ bssids = {}
 
 timeout_threshold = 120
 
-def log_bssid(bssid):
+def clear_log():
     global bssids
-    if bssid not in bssids:
-        bssids[bssid]["first_seen"] = time.time()
-        bssids[bssid]["last_seen"] = time.time()
-    else:
-        bssids[bssid]["last_seen"] = time.time()
+    bssids = {}
+
+def log_bssid(bssid, first_seen, last_seen):
+    global bssids
+    bssids[bssid] = {"first_seen": first_seen, "last_seen": last_seen}
 
 def get_wait_time():
     global timeout_threshold, bssids
