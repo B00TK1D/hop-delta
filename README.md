@@ -1,3 +1,3 @@
 # hop-delta
 
-Run with `sh run.sh`
+Run with `sudo sh run.sh`
