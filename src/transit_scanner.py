@@ -37,7 +37,7 @@ class TransitScanner:
                 )
                 overlap_time = max(end_overlap - start_overlap, 0)
                 overlap_times.append(overlap_time)
-        
+
         if overlap_times:
             average_overlap_time = sum(overlap_times) / len(overlap_times)
             return average_overlap_time
@@ -50,12 +50,15 @@ class TransitScanner:
             return distance / average_overlap_time
         else:
             return None
-        
-    def transit_time_dashboard(self, scanner1_id, scanner2_id, bssid):
-        overlap_time = self.calculate_overlap_time(scanner1_id, scanner2_id, bssid)
-        speed = self.calculate_speed(overlap_time)
 
-        transit_time_str = f"{overlap_time:.2f} seconds"
-        speed_str = "N/A" if speed is None else f"{speed:.2f} units/second"
+    @classmethod
+    def transit_time_dashboard(self, scanner1_id, scanner2_id, bssids):
+        average_overlap_time = self.calculate_average_overlap_time(
+            scanner1_id, scanner2_id, bssids)
+        average_speed = self.calculate_average_speed(
+            self.distance, average_overlap_time)
+
+        transit_time_str = f"{average_overlap_time:.2f} seconds"
+        speed_str = "N/A" if average_speed is None else f"{average_speed:.2f} units/second"
 
         return render_template("transit-time.html", transit_time=transit_time_str, speed=speed_str)
