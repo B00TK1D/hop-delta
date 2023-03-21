@@ -10,21 +10,23 @@ def scan_loop():
     while True:
         db.clear_log()
         try:
-            with open("bssid-log.csv", "r") as f:
-                lines = f.readlines()
-                for line in lines:
-                    if line.startswith("BSSID"):
-                        continue
-                    bssid = line.split(",")[0]
-                    first_seen_str = line.split(",")[1]
-                    last_seen_str = line.split(",")[2]
-                    # Convert first seen and last seen from strings to time epochs
-                    first_seen = time.mktime(time.strptime(first_seen_str, "%Y-%m-%d %H:%M:%S"))
-                    last_seen = time.mktime(time.strptime(last_seen_str, "%Y-%m-%d %H:%M:%S"))
-                    print(bssid, first_seen, last_seen)
-                    db.log_bssid(bssid, first_seen, last_seen)
-            with open("bssid-log.csv", "w") as f:
-                f.write("")
+            # For file in logs/ directory
+            for file in os.listdir("logs"):
+                with open(file, "r") as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        if line.startswith("BSSID"):
+                            continue
+                        bssid = line.split(",")[0]
+                        first_seen_str = line.split(",")[1]
+                        last_seen_str = line.split(",")[2]
+                        # Convert first seen and last seen from strings to time epochs
+                        first_seen = time.mktime(time.strptime(first_seen_str, "%Y-%m-%d %H:%M:%S"))
+                        last_seen = time.mktime(time.strptime(last_seen_str, "%Y-%m-%d %H:%M:%S"))
+                        print(bssid, first_seen, last_seen)
+                        db.log_bssid(bssid, first_seen, last_seen)
+                # Delete the file
+                os.remove("logs/" + file)
         except:
             pass
         time.sleep(1)
@@ -37,5 +39,5 @@ def init():
     os.system("sudo airmon-ng start wlp0s20f3")
     exploit_thread = threading.Thread(target=scan_loop)
     exploit_thread.start()
-    os.system("sudo nohup airodump-ng -w bssid-log.csv --output-format csv wlp0s20f3mon &")
+    os.system("sudo nohup airodump-ng -w logs/bssid.csv --output-format csv wlp0s20f3mon &")
     pass
