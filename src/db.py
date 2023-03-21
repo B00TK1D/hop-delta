@@ -21,5 +21,5 @@ def get_wait_time():
             del bssids[bssid]
         else:
             s += bssids[bssid]["last_seen"] - bssids[bssid]["first_seen"]
-    s = s / len(bssids)
+    s = s / max(len(bssids), 1)
     return s

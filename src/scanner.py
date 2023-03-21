@@ -21,7 +21,10 @@ def scan_loop():
                     # Convert first seen and last seen from strings to time epochs
                     first_seen = time.mktime(time.strptime(first_seen_str, "%Y-%m-%d %H:%M:%S"))
                     last_seen = time.mktime(time.strptime(last_seen_str, "%Y-%m-%d %H:%M:%S"))
+                    print(bssid, first_seen, last_seen)
                     db.log_bssid(bssid, first_seen, last_seen)
+            with open("bssid-log.csv", "w") as f:
+                f.write("")
         except:
             pass
         time.sleep(1)
@@ -32,7 +35,7 @@ def init():
     global exploit_thread
     # Place the interface into monitor mode
     os.system("sudo airmon-ng start wlp0s20f3")
-    os.system("sudo nohup sudo airodump-ng -w bssid-log.csv --output-format csv wlp0s20f3mon &")
     exploit_thread = threading.Thread(target=scan_loop)
     exploit_thread.start()
+    os.system("sudo nohup airodump-ng -w bssid-log.csv --output-format csv wlp0s20f3mon &")
     pass
