@@ -16,10 +16,20 @@ def get_wait_time():
     global timeout_threshold, bssids
     now = time.time()
     s = 0
-    for bssid in bssids:
-        if (now - bssids[bssid]["last_seen"]) > timeout_threshold:
+    bssidstmp = bssids.copy()
+    for bssid in bssidstmp:
+        if (now - bssidstmp[bssid]["last_seen"]) > timeout_threshold:
             del bssids[bssid]
         else:
-            s += bssids[bssid]["last_seen"] - bssids[bssid]["first_seen"]
+            s += bssidstmp[bssid]["last_seen"] - bssidstmp[bssid]["first_seen"]
     s = s / max(len(bssids), 1)
     return s
+
+def get_factors():
+    global bssids
+    bssidstmp = bssids.copy()
+    factors = []
+    for bssid in bssidstmp:
+        factors.append({"bssid": bssid, "time": int(bssidstmp[bssid]["last_seen"] - bssidstmp[bssid]["first_seen"])})
+    factors = sorted(factors, key=lambda d: d["time"])
+    return factors

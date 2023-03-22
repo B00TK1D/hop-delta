@@ -1,5 +1,21 @@
 {% extends "base.html" %}
 {% set active_page = "Dashboard" %}
+{% set refresh_interval = 5 %}
 {% block content %}
     <h1>Estimated wait time: {{ time }}</h1>
+    <a class="btn btn-danger" href="/reset">Reset</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Factors</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        {% for factor in factors %}
+            <tr>
+                <td> {{ factor.bssid }}</td>
+                <td> {{ factor.time }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
